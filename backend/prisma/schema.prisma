@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ORGANIZER
+  ADMIN
+}
+
+enum TournamentStatus {
+  DRAFT
+  REGISTRATION_OPEN
+  ONGOING
+  COMPLETED
+}
+
+enum RegistrationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum MatchStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum MatchOutcome {
+  WIN
+  TIE
+  DRAW
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  name        String
+  email       String       @unique
+  password    String
+  role        UserRole     @default(ORGANIZER)
+  tournaments Tournament[] @relation("TournamentOrganizer")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Tournament {
+  id          Int              @id @default(autoincrement())
+  name        String
+  description String?          @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  maxTeams    Int
+  format      String           @default("LEAGUE")
+  status      TournamentStatus @default(DRAFT)
+
+  winPoints  Int @default(2)
+  tiePoints  Int @default(1)
+  lossPoints Int @default(0)
+
+  organizerId Int
+  organizer   User @relation("TournamentOrganizer", fields: [organizerId], references: [id])
+
+  teams   TournamentTeam[]
+  players TournamentPlayer[]
+  matches Match[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizerId])
+  @@index([status])
+}
+
+model Team {
+  id        Int     @id @default(autoincrement())
+  name      String
+  logo      String?
+  captainId Int?
+  captain   Player? @relation("TeamCaptain", fields: [captainId], references: [id])
+
+  tournamentTeams   TournamentTeam[]
+  tournamentPlayers TournamentPlayer[]
+
+  homeMatches Match[]           @relation("HomeTeam")
+  awayMatches Match[]           @relation("AwayTeam")
+  wonResults  MatchResult[]     @relation("WinningTeam")
+  playerStats PlayerMatchStat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
+
+model Player {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String?
+  phone String?
+  age   Int?
+  role  String?
+
+  captainOf     Team[]             @relation("TeamCaptain")
+  registrations TournamentPlayer[]
+  matchStats    PlayerMatchStat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TournamentTeam {
+  id           Int                @id @default(autoincrement())
+  tournamentId Int
+  teamId       Int
+  status       RegistrationStatus @default(PENDING)
+  registeredAt DateTime           @default(now())
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  team       Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, teamId])
+  @@index([status])
+}
+
+model TournamentPlayer {
+  id           Int      @id @default(autoincrement())
+  tournamentId Int
+  teamId       Int
+  playerId     Int
+  joinedAt     DateTime @default(now())
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  team       Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  player     Player     @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  // A player can represent only one team in a tournament.
+  @@unique([tournamentId, playerId])
+  @@index([teamId])
+}
+
+model Match {
+  id           Int         @id @default(autoincrement())
+  tournamentId Int
+  homeTeamId   Int
+  awayTeamId   Int
+  round        Int
+  matchDate    DateTime?
+  venue        String?
+  status       MatchStatus @default(SCHEDULED)
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  homeTeam   Team       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam   Team       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+
+  result      MatchResult?
+  playerStats PlayerMatchStat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tournamentId, round])
+  @@index([status])
+}
+
+model MatchResult {
+  id           Int          @id @default(autoincrement())
+  matchId      Int          @unique
+  homeScore    Int
+  awayScore    Int
+  outcome      MatchOutcome
+  winnerTeamId Int?
+  notes        String?      @db.Text
+
+  match      Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  winnerTeam Team? @relation("WinningTeam", fields: [winnerTeamId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PlayerMatchStat {
+  id          Int @id @default(autoincrement())
+  matchId     Int
+  playerId    Int
+  teamId      Int
+  runs        Int @default(0)
+  wickets     Int @default(0)
+  ballsFaced  Int @default(0)
+  ballsBowled Int @default(0)
+
+  match  Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  player Player @relation(fields: [playerId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  @@unique([matchId, playerId])
+  @@index([playerId])
+  @@index([teamId])
+}

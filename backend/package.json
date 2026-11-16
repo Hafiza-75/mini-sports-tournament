@@ -1,13 +1,21 @@
+
 {
-  "name": "backend",
+  "name": "mini-sports-tournament-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend API for Mini Sports Tournament Management System",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "sports",
+    "tournament",
+    "management"
+  ],
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
