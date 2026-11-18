@@ -10,6 +10,8 @@ const playerRoutes = require("./routes/player.routes");
 const tournamentRegistrationRoutes = require("./routes/tournament-registration.routes");
 const registrationRoutes = require("./routes/registration.routes");
 
+const fixtureRoutes = require("./routes/fixture.routes");
+
 const {
   notFound,
   errorHandler,
@@ -37,6 +39,8 @@ app.use("/api/players", playerRoutes);
 
 app.use("/api/tournaments", tournamentRegistrationRoutes);
 app.use("/api/registrations", registrationRoutes);
+
+app.use("/api/fixtures", fixtureRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
