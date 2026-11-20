@@ -1,0 +1,5 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/api/fixtures/2/generate"
+method: POST
+order: 7000

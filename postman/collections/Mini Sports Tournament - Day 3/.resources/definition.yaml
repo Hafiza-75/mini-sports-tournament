@@ -1,0 +1,20 @@
+$kind: collection
+variables:
+  - key: baseUrl
+    value: ""
+    disabled: false
+  - key: token
+    value: ""
+    disabled: false
+  - key: json_web_token_0a88
+    secret: true
+    disabled: false
+  - key: json_web_token_0v99
+    secret: true
+    disabled: false
+auth:
+  - id: 29dcc30b-25df-4893-8775-1fff85fbcdc1
+    type: bearer
+    name: Bearer Token
+    credentials:
+      token: "{{token}}"

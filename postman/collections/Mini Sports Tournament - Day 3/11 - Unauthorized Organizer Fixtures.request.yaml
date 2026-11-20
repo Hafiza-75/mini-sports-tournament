@@ -1,0 +1,12 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/api/fixtures/2/generate"
+method: POST
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0v99}}"
+order: 11000

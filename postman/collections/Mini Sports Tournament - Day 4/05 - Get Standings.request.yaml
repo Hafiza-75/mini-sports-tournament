@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/standings/{{tournamentId}}"
+method: GET
+order: 5000

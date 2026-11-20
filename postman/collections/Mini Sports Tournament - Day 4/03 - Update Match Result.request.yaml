@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/api/results/{{matchId}}"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"homeScore\": 100,\r
+
+    \  \"awayScore\": 100,\r
+
+    \  \"notes\": \"Updated result - scores level\"\r
+
+    }"
+order: 3000

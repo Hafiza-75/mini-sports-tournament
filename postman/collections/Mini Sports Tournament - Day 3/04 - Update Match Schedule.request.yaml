@@ -1,0 +1,14 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/api/fixtures/matches/1/schedule"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"matchDate\": \"2026-11-22T15:00:00.000Z\",\r
+
+    \  \"venue\": \"Gaddafi Stadium, Lahore\"\r
+
+    }"
+order: 4000

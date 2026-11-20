@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/results/{{matchId}}"
+method: POST
+body:
+  type: json
+  content: '{"homeScore": 150, "awayScore": 120, "notes": "Duplicate result"}'
+order: 12000

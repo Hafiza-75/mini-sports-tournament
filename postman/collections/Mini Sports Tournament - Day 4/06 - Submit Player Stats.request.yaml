@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseUrl}}/api/stats/{{matchId}}"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"stats\": [\r
+
+    \    {\r
+
+    \      \"playerId\": 2,\r
+
+    \      \"teamId\": 2,\r
+
+    \      \"runs\": 55,\r
+
+    \      \"wickets\": 1,\r
+
+    \      \"ballsFaced\": 40,\r
+
+    \      \"ballsBowled\": 24\r
+
+    \    }\r
+
+    \  ]\r
+
+    }"
+order: 6000

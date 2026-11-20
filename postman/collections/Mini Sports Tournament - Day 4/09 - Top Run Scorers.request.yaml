@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/leaderboard/{{tournamentId}}/runs"
+method: GET
+order: 9000

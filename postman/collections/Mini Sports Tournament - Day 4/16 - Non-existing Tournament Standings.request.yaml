@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/standings/999"
+method: GET
+order: 17000

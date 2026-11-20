@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/api/results/{{matchId}}"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"homeScore\": 150,\r
+
+    \  \"awayScore\": 120,\r
+
+    \  \"notes\": \"Match completed successfully\"\r
+
+    }"
+order: 1000
